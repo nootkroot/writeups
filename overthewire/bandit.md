@@ -169,3 +169,28 @@ Base64 is a simply a different way to represent numbers a data. Instead of it be
 ![image](https://user-images.githubusercontent.com/65555981/197025639-eca389b3-862a-4154-9b57-20142e731c09.png)
 
 ### password: JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv
+
+# Level 12 &rarr; Level 13
+
+## Level Goal
+> The password for the next level is stored in the file **data.txt**, which is a hexdump of a file that has been repeatedly compressed. For this level it may be useful to create a directory under /tmp in which you can work using mkdir. For example: mkdir /tmp/myname123. Then copy the datafile using cp, and rename it using mv (read the manpages!)
+
+## Solution
+Because I can't edit anything in the home directory, I create a temporary folder using `mktemp -d`. Once we have our temporary directory we copy over `data.txt`. I then convert `data.txt` to a normal binary file using `xxd -r` and then uncompress using either `bzip2`, `gzip`, or `tar` until I got the password. Eventually, we end up with the file `data8` and printing it gives us the password.
+
+![image](https://user-images.githubusercontent.com/65555981/197033585-82d25e23-b2df-4086-81af-d38b172b15b5.png)
+
+### password: wbWdlBxEir4CaE8LaPhauuOo6pwRmrDw
+
+# Level 13 &rarr; Level 14
+
+## Level Goal
+> The password for the next level is stored in **/etc/bandit_pass/bandit14 and can only be read by user bandit14**. For this level, you don’t get the next password, but you get a private SSH key that can be used to log into the next level. **Note: localhost** is a hostname that refers to the machine you are working on
+
+## Solution
+You can use the private key to login to `bandit14` instead of using a password. You can specify the private key using the `-i` flag in `ssh`. The full command would look like `ssh -i sshkey.private bandit14@bandit.labs.overthewire.org -p 2220`. Once you're in you can grab the password from `/etc/bandit_pass/bandit14`.
+
+![image](https://user-images.githubusercontent.com/65555981/197039529-848670e8-f168-4f82-bb74-ee56e40b542c.png)
+![image](https://user-images.githubusercontent.com/65555981/197039570-0f599cb9-02a5-43cb-bc78-47a109c316c0.png)
+
+### password: fGrHPx402xGC7U7rXKDaxiWFTOiF0ENq
