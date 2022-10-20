@@ -1,3 +1,5 @@
+*Some screenshots may look different and that's becaue I'm working on this on different devices. Just ignore it lol.*
+
 # Level 0 &rarr; Level 1
 
 ## Level Goal
@@ -21,3 +23,29 @@ When `-` is used by itself, Unix systems will intrepret that as stdin/stdout (fr
 ![image](https://user-images.githubusercontent.com/65555981/196870218-69579d5e-9d0b-4ba7-8b27-3130e20157eb.png)
 
 ### password: rRGizSaX8Mk1RTb1CNQoXTcYZWU6lgzi
+
+# Level 2 &rarr; Level 3
+
+## Level Goal
+> The password for the next level is stored in a file called **spaces in this filename** located in the home directory
+
+## Solution
+There are two ways to solve this, you can either put the file name in double quotes or you can escape each space with a backslash.
+
+![image](https://user-images.githubusercontent.com/65555981/196984616-74da6321-9c11-425f-a1b6-275b6c15f989.png)
+
+### password: aBZ0W5EmUfAf7kHTQeOwd8bauFJ2lAiG
+
+# Level 3 &rarr; Level 4
+
+## Level Goal
+> The password for the next level is stored in a hidden file in the inhere directory.
+
+## Solution
+At first, when we go into the `inhere` folder and run `ls`, we don't see any files, though not suprising since we're told the file is hidden. If we look at the man page for `ls`, we see that theres a flag `-a` which doesn't ignore file names starting with a dot. When we run `ls -a` we see there is a file called `.hidden`. Running `cat` on the file gives us our password.
+
+![image](https://user-images.githubusercontent.com/65555981/196988883-5d552491-4f89-477c-9ab9-12979cc9eb40.png)
+
+### password: 2EW7BBsr6aMMoJ2HjW067dm8EgX26xNe
+
+# Level 4 &rarr; Level 5
