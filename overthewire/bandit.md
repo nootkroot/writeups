@@ -121,3 +121,51 @@ For this challenge we can use the `grep` command. According to the man page, "*`
 ![image](https://user-images.githubusercontent.com/65555981/197015885-b040d0ef-c785-4e21-bb48-4b97a329c43f.png)
 
 ### password: TESKZC0XvTetK0S9xNwm25STk5iWrBvP
+
+# Level 8 &rarr; Level 9
+
+## Level Goal
+> The password for the next level is stored in the file **data.txt** and is the only line of text that occurs only once
+
+## Solution
+The first thing that came to mind when I read "occurs only once" was the command `uniq`. `uniq` will remove all duplicates by default, however with the `-u` flag it will only print unique lines. There's one more problem, in `uniq` only check adjacent lines for duplicates, not through the entire file. That means the file has to be sorted first before running `uniq`. We can use the `sort` command to sort the lines of the file. The full command would be `sort data.txt | uniq -u`.
+
+![image](https://user-images.githubusercontent.com/65555981/197019118-6f7c7f10-e51d-46b0-b152-d454b39e107c.png)
+
+### password: EN632PlfYiZbn3PhVK3XOGSlNInNE00t
+
+# Level 9 &rarr; Level 10
+
+## Level Goal
+> The password for the next level is stored in the file **data.txt** in one of the few human-readable strings, preceded by several ‘=’ characters.
+
+## Solution
+All I did was grep the file for at least 3 "=" and it gave me the password.
+
+![image](https://user-images.githubusercontent.com/65555981/197020811-06a9de5c-51e0-44ab-89af-bc1dff06bc4c.png)
+
+### password: G7w8LIi6J3kTb8A7j9LgrywtEUlyyp6s
+
+# Level 10 &rarr; Level 11
+
+## Level Goal
+> The password for the next level is stored in the file **data.txt**, which contains base64 encoded data
+
+## Solution
+Base64 is a simply a different way to represent numbers a data. Instead of it being represented in base-10 (decimal) or base-2 (binary), it has 64 unique (digits) it uses to represent data. We can decode this data in linux with the `base64` command with the `-d` flag. Doing this on the contents of `data.txt` gives us the password.
+
+![image](https://user-images.githubusercontent.com/65555981/197021794-60acd543-70cd-4439-92b8-fedc2ac8252d.png)
+
+### password: 6zPeziLdR2RKNdNYFNb6nVCKzphlXHBM
+
+# Level 11 &rarr; Level 12
+
+## Level Goal
+> The password for the next level is stored in the file **data.txt**, where all lowercase (a-z) and uppercase (A-Z) letters have been rotated by 13 positions
+
+## Solution
+`data.txt` is encrypted using ROT13. ROT13 simply rotates each letter by 13 positions. In the case that it goes over 26, it loops back around. Decoding ROT13 can be done on linux with the `tr` command. `tr` translates the characters in its first argument with the characters in it's second. The command to decode ROT13 would look like `tr 'A-Za-z' 'N-ZA-Mn-za-m'`. So 'A' would be replaced with 'N' and 'Z' would be replaced with 'M'. Running this command on the contents of `data.txt` gives us the password.
+
+![image](https://user-images.githubusercontent.com/65555981/197025639-eca389b3-862a-4154-9b57-20142e731c09.png)
+
+### password: JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv
