@@ -194,3 +194,76 @@ You can use the private key to login to `bandit14` instead of using a password. 
 ![image](https://user-images.githubusercontent.com/65555981/197039570-0f599cb9-02a5-43cb-bc78-47a109c316c0.png)
 
 ### password: fGrHPx402xGC7U7rXKDaxiWFTOiF0ENq
+
+# Level 14 &rarr; Level 15
+
+## Level Goal
+> The password for the next level can be retrieved by submitting the password of the current level to **port 30000 on localhost**.
+
+## Solution
+We can connect to localhost on port 30000 by using a tool called netcat, typed out `nc` in Linux. Using `nc localhost 30000` we are able to submit the current level's password and recieve the next password.
+
+![image](https://user-images.githubusercontent.com/65555981/197250271-e57001d1-5ef4-4bcd-b3a6-21f537059684.png)
+
+### password: jN2kgmIXJ6fShzhT2avhotn4Zcka6tnt
+
+# Level 15 &rarr; Level 16
+
+## Level Goal
+> The password for the next level can be retrieved by submitting the password of the current level to **port 30001 on localhost** using SSL encryption.
+> 
+> **Helpful note: Getting “HEARTBEATING” and “Read R BLOCK”? Use -ign_eof and read the “CONNECTED COMMANDS” section in the manpage. Next to ‘R’ and ‘Q’, the ‘B’ command also works in this version of that command…**
+
+## Solution
+I used the `openssl s_client` command to connect using SSL. The full command looked like `openssl s_client -connect localhost:30001`. (I didn't have to use the hint as I was still able to input the current password and still get the next password.)
+
+![image](https://user-images.githubusercontent.com/65555981/197252432-b145cd86-c23c-4b5c-8129-c4f2fa7478f7.png)
+
+### password: JQttfApK4SeyHwDlI9SXGR50qclOAil1
+
+# Level 16 &rarr; Level 17
+
+## Level Goal
+> The credentials for the next level can be retrieved by submitting the password of the current level to **a port on localhost in the range 31000 to 32000**. First find out which of these ports have a server listening on them. Then find out which of those speak SSL and which don’t. There is only 1 server that will give the next credentials, the others will simply send back to you whatever you send to it.
+
+## Solution
+It would take way too long to manually go through each port and check if it's the right server so we would need some sort of tool to scan the entire network quickly and detect whether its using SSL. Thankfully, we don't have to make that ourselves since it's already been made. Nmap is a port scanning tool that will help us solve this challenge effectively. When look at the man page for `nmap`, we see and example command which is the what the typical `nmap` command looks like. Using this, we can figure out what ports are open and if SSL is on them. However, we aren't looking to scan the entire network, only in the range of 31000 ro 32000. In order to specify the port range, we can use the arugment `-p`. The full command would be `nmap -a -T4 -p31000-32000 localhost`. The scan returns this:
+
+![image](https://user-images.githubusercontent.com/65555981/197256086-eb64bc31-302f-410e-919f-4d6322d2a193.png)
+
+We can see there are actually 2 ports using SSL, but one of them is marked as `ssl/echo` meaning when we send data to it, we will just get that data back. The port we should try connect to is probably `31790`. Doing this gives us the private key to connect to the next level.
+
+![image](https://user-images.githubusercontent.com/65555981/197258000-f2701aae-b760-4008-8b01-39dbf92b47cc.png)
+
+
+### cert:
+```
+-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAvmOkuifmMg6HL2YPIOjon6iWfbp7c3jx34YkYWqUH57SUdyJ
+imZzeyGC0gtZPGujUSxiJSWI/oTqexh+cAMTSMlOJf7+BrJObArnxd9Y7YT2bRPQ
+Ja6Lzb558YW3FZl87ORiO+rW4LCDCNd2lUvLE/GL2GWyuKN0K5iCd5TbtJzEkQTu
+DSt2mcNn4rhAL+JFr56o4T6z8WWAW18BR6yGrMq7Q/kALHYW3OekePQAzL0VUYbW
+JGTi65CxbCnzc/w4+mqQyvmzpWtMAzJTzAzQxNbkR2MBGySxDLrjg0LWN6sK7wNX
+x0YVztz/zbIkPjfkU1jHS+9EbVNj+D1XFOJuaQIDAQABAoIBABagpxpM1aoLWfvD
+KHcj10nqcoBc4oE11aFYQwik7xfW+24pRNuDE6SFthOar69jp5RlLwD1NhPx3iBl
+J9nOM8OJ0VToum43UOS8YxF8WwhXriYGnc1sskbwpXOUDc9uX4+UESzH22P29ovd
+d8WErY0gPxun8pbJLmxkAtWNhpMvfe0050vk9TL5wqbu9AlbssgTcCXkMQnPw9nC
+YNN6DDP2lbcBrvgT9YCNL6C+ZKufD52yOQ9qOkwFTEQpjtF4uNtJom+asvlpmS8A
+vLY9r60wYSvmZhNqBUrj7lyCtXMIu1kkd4w7F77k+DjHoAXyxcUp1DGL51sOmama
++TOWWgECgYEA8JtPxP0GRJ+IQkX262jM3dEIkza8ky5moIwUqYdsx0NxHgRRhORT
+8c8hAuRBb2G82so8vUHk/fur85OEfc9TncnCY2crpoqsghifKLxrLgtT+qDpfZnx
+SatLdt8GfQ85yA7hnWWJ2MxF3NaeSDm75Lsm+tBbAiyc9P2jGRNtMSkCgYEAypHd
+HCctNi/FwjulhttFx/rHYKhLidZDFYeiE/v45bN4yFm8x7R/b0iE7KaszX+Exdvt
+SghaTdcG0Knyw1bpJVyusavPzpaJMjdJ6tcFhVAbAjm7enCIvGCSx+X3l5SiWg0A
+R57hJglezIiVjv3aGwHwvlZvtszK6zV6oXFAu0ECgYAbjo46T4hyP5tJi93V5HDi
+Ttiek7xRVxUl+iU7rWkGAXFpMLFteQEsRr7PJ/lemmEY5eTDAFMLy9FL2m9oQWCg
+R8VdwSk8r9FGLS+9aKcV5PI/WEKlwgXinB3OhYimtiG2Cg5JCqIZFHxD6MjEGOiu
+L8ktHMPvodBwNsSBULpG0QKBgBAplTfC1HOnWiMGOU3KPwYWt0O6CdTkmJOmL8Ni
+blh9elyZ9FsGxsgtRBXRsqXuz7wtsQAgLHxbdLq/ZJQ7YfzOKU4ZxEnabvXnvWkU
+YOdjHdSOoKvDQNWu6ucyLRAWFuISeXw9a/9p7ftpxm0TSgyvmfLF2MIAEwyzRqaM
+77pBAoGAMmjmIJdjp+Ez8duyn3ieo36yrttF5NSsJLAbxFpdlc1gvtGCWW+9Cq0b
+dxviW8+TFVEBl1O4f7HVm6EpTscdDxU+bCXWkfjuRb7Dy9GOtt9JPsX8MBTakzh3
+vBgsyi/sN3RqRBcGU40fOoZyfAMT8s1m/uYv52O6IgeuZ/ujbjY=
+-----END RSA PRIVATE KEY-----
+```
+
