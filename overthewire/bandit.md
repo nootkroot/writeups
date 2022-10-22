@@ -267,3 +267,89 @@ vBgsyi/sN3RqRBcGU40fOoZyfAMT8s1m/uYv52O6IgeuZ/ujbjY=
 -----END RSA PRIVATE KEY-----
 ```
 
+# Level 17 &rarr; Level 18
+
+## Level Goal
+> There are 2 files in the homedirectory: **passwords.old and passwords.new**. The password for the next level is in passwords.new and is the only line that has been changed between passwords.old and passwords.new
+> 
+> NOTE: if you have solved this level and see ‘Byebye!’ when trying to log into bandit18, this is related to the next level, bandit19
+
+## Solution
+Use the `diff` command to find the difference between `passwords.old` and `passwords.new`.
+
+![image](https://user-images.githubusercontent.com/65555981/197309137-7e8f7677-b4ff-49b9-b922-3852605e497a.png)
+
+### password: hga5tuuCLF6fFzUpnagiMN8ssu9LFrdg
+
+# Level 18 &rarr; Level 19
+
+## Level Goal
+> The password for the next level is stored in a file **readme** in the homedirectory. Unfortunately, someone has modified **.bashrc** to log you out when you log in with SSH.
+
+## Solution
+The `.bashrc` file is executed when a user logs in with the bash shell. However, if we are able to login using a different shell, that script would not run. We can do this in `ssh` by using the `-t` argument. We can specify we want the `sh` shell for example, which is *pretty much* just a miniature `bash`. Once we're in we grab the password from `readme`.
+
+![image](https://user-images.githubusercontent.com/65555981/197309611-fd4a8b6c-a595-49d3-9718-2a5e8f71ae66.png)
+
+### password: awhqfNnAbc1naukrpqDYcF95h7HoMTrC
+
+# Level 19 &rarr; Level 20
+
+## Level Goal
+> To gain access to the next level, you should use the setuid binary in the homedirectory. Execute it without arguments to find out how to use it. The password for this level can be found in the usual place (/etc/bandit_pass), after you have used the setuid binary.
+
+## Solution
+A `setuid` binary is a program that can be run as another user. In this case, the `bandit20-do` binary runs commands as the user `bandit20`. Because each user has access to their own password in `/etc/bandit_pass/` we're able to run `cat /etc/bandit_pass/bandit20` as `bandit20` and get the password.
+
+![image](https://user-images.githubusercontent.com/65555981/197310054-8e4e0eab-578e-4bf8-9dd4-ed1413c91759.png)
+
+### password: VxCazJaVykI6W36BkBU0mJTCM8rR95XT
+
+# Level 20 &rarr; Level 21
+
+## Level Goal
+> There is a setuid binary in the homedirectory that does the following: it makes a connection to localhost on the port you specify as a commandline argument. It then reads a line of text from the connection and compares it to the password in the previous level (bandit20). If the password is correct, it will transmit the password for the next level (bandit21).
+> 
+> **NOTE:** Try connecting to your own network daemon to see if it works as you think
+
+## Solution
+First we would have to create somewhere for the binary to connect to. This can be done using `nc -l <PORT>`. Also, in order to send the password on connection, we can pipe the password into the netcat command. Last step is to put the listener in the background using the `&` symbol. Running the binary with the port specified will give us the password.
+
+![image](https://user-images.githubusercontent.com/65555981/197310865-d5472312-cf4e-4034-a99a-71502e881589.png)
+
+### password: NvEJF7oVjkddltPSrdKEFOllh9V1IBcq
+
+# Level 21 &rarr; Level 22
+
+## Level Goal
+> A program is running automatically at regular intervals from **cron**, the time-based job scheduler. Look in **/etc/cron.d/** for the configuration and see what command is being executed.
+
+## Solution
+When I looked inside `/etc/cron.d/` I noticed the file `cronjob_bandit22`. This contains the cronjob for `bandit22` and so maybe it could lead us somewhere useful. When looking into the file I notice that it references a bash script. Opening that script then tells us that it's writing the password of `bandit22` to `/tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv`. Opening that file reveals the password.
+
+![image](https://user-images.githubusercontent.com/65555981/197321849-cfbce4b5-d73d-40ee-9ecb-0a2dc4472ffb.png)
+
+### password: WdDozAdTM2z9DiFEQ2mGlwngMfj4EZff
+
+# Level 22 &rarr; Level 23
+
+## Level Goal
+> A program is running automatically at regular intervals from **cron**, the time-based job scheduler. Look in **/etc/cron.d/** for the configuration and see what command is being executed.
+> 
+> **NOTE:** Looking at shell scripts written by other people is a very useful skill. The script for this level is intentionally made easy to read. If you are having problems understanding what it does, try executing it to see the debug information it prints.
+
+## Solution
+Similar to the previous level, we look through the cron file and the script. In the shell script we notice that the password is copied into `/tmp/$mytarget`. However, `$mytarget` is not the name of a file, it's a variable in the script. In order to figure out where the password is really stored we need to figure out the value of `$mytarget`. We can do that in the shell by running what it was supposed to be set to. However we would either need to set the `$myname` variable in our shell or just replace it with `bandit23`. Doing this gives us the value of `$mytarget` and therefore the location of the password.
+
+![image](https://user-images.githubusercontent.com/65555981/197323020-0053f4f4-c632-4922-9eba-1415ed2e90a8.png)
+
+### password: QYw0Y2aiA672PsMmh9puTQuhoz8SyR2G
+
+# Level 23 &rarr; Level 24
+
+## Level Goal
+> A program is running automatically at regular intervals from **cron**, the time-based job scheduler. Look in **/etc/cron.d/** for the configuration and see what command is being executed.
+> 
+> **NOTE:** This level requires you to create your own first shell-script. This is a very big step and you should be proud of yourself when you beat this level!
+> 
+> **NOTE 2:** Keep in mind that your shell script is removed once executed, so you may want to keep a copy around…
